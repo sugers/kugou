@@ -12,8 +12,8 @@
             </van-swipe-item>
           </van-swipe>
           <ul class="songlist">
-            <li v-for="(item,index) in datalist" :key="index">
-              <div class="list_left">
+            <li v-for="(item,index) in datalist" :class="item.audio_id" :key="index">
+              <div class="list_left" :data-hash="item.hash" @click="getmusicInfo(item.hash)">
                 <span>{{item.filename}}</span>
               </div>
               <div class="list_right">
@@ -26,34 +26,46 @@
         <van-tab title="排行">
           <Rank></Rank>
         </van-tab>
-        <van-tab title="歌单"><Songlist></Songlist></van-tab>
-        <van-tab title="歌手"><Singerinfo></Singerinfo></van-tab>
+        <van-tab title="歌单">
+          <Songlist></Songlist>
+        </van-tab>
+        <van-tab title="歌手">
+          <Singerinfo></Singerinfo>
+        </van-tab>
       </van-tabs>
     </div>
+    <van-popup v-model="show" position="bottom" :overlay="false">
+    <Player :message="playersrc" :playimg="playimg" :songtitle="songtitle"></Player>
+    </van-popup>
   </section>
 </template>
 
 <script>
-import Rank from './rank.vue';
-import Songlist from './songlist.vue';
-import Singerinfo from './singerinfo.vue'
+  import Rank from './rank.vue';
+  import Songlist from './songlist.vue';
+  import Singerinfo from './singerinfo.vue'
+  import Player from '../../components/palyer.vue'
   export default {
     data() {
       return {
         value: '',
         images: [],
         banner: [],
-        datalist: []
+        datalist: [],
+        playersrc:'',
+        playimg:'',
+        show: false,
+        songtitle:''
       }
     },
-    components:{
+    components: {
       Rank,
       Songlist,
-      Singerinfo
+      Singerinfo,
+      Player
     },
     created() {
       this.getbanner();
-      this.test()
     },
     methods: {
       getbanner() {
@@ -64,22 +76,29 @@ import Singerinfo from './singerinfo.vue'
           }
         }).then(res => {
           console.log(res)
+          this.songtitle=res.data.data.filename
           this.banner = res.data.banner;
-          this.datalist = res.data.data
+          this.datalist = res.data.data;
+          // this.playerimg=res.data.data
           let _this = this;
           this.banner.forEach(function(val, index) {
             _this.images.push(val.imgurl)
+
           });
 
         }).catch(err => {
           //todo
         })
       },
-      test(){
-        let url="/api/?hash=17BA5C58B4D8E6AD282DA513BB3F91C9";
-        this.axios.get(url).then(res=>{
-          console.log(res)
-        }).catch(err=>{
+      getmusicInfo(hash) {
+        let url = "/api/app/i/getSongInfo.php/?hash=" + hash + "&from=mkugou&cmd=playInfo";
+        this.axios.get(url).then(res => {
+          this.show = true;
+          this.playersrc=res.data.url
+          this.playimg=res.data.imgUrl
+          let imgarr=this.playimg.split('{size}');
+          this.playimg=imgarr[0] + "400" + imgarr[1];
+        }).catch(err => {
           //todo
         })
       }
@@ -88,6 +107,16 @@ import Singerinfo from './singerinfo.vue'
 </script>
 
 <style scoped>
+  html,
+  body {
+    height: 100%;
+  }
+
+  .tabs {
+    height: 100%;
+    position: relative;
+  }
+
   .tabs img {
     max-width: 100%;
     display: block;
@@ -119,6 +148,4 @@ import Singerinfo from './singerinfo.vue'
     float: right;
     padding-right: 20px;
   }
-
-
 </style>

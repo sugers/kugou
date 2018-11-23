@@ -1,7 +1,7 @@
 <template>
   <div class="singer">
      <ul>
-        <li v-for="(singeritem,index) in singerArr" >
+        <li v-for="(singeritem,index) in singerArr" :key="index" >
          <div>
             <span>{{singeritem.classname}}</span>
             <van-icon name="arrow"/>
