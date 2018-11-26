@@ -13,7 +13,7 @@
           </van-swipe>
           <ul class="songlist">
             <li v-for="(item,index) in datalist" :class="item.audio_id" :key="index">
-              <div class="list_left" :data-hash="item.hash" @click="getmusicInfo(item.hash)">
+              <div class="list_left" :data-hash="item.hash" @click="getmusicInfo(item.hash,index)">
                 <span>{{item.filename}}</span>
               </div>
               <div class="list_right">
@@ -35,7 +35,7 @@
       </van-tabs>
     </div>
     <van-popup v-model="show" position="bottom" :overlay="false">
-    <Player :message="playersrc" :playimg="playimg" :songtitle="songtitle"></Player>
+      <Player :message="playersrc" :playimg="playimg" :songtitle="songtitle"></Player>
     </van-popup>
   </section>
 </template>
@@ -52,10 +52,10 @@
         images: [],
         banner: [],
         datalist: [],
-        playersrc:'',
-        playimg:'',
+        playersrc: '',
+        playimg: '',
         show: false,
-        songtitle:''
+        songtitle: '',
       }
     },
     components: {
@@ -76,28 +76,35 @@
           }
         }).then(res => {
           console.log(res)
-          this.songtitle=res.data.data.filename
+        //    this.$store.commit('newIndex',hash)
+        //  console.log(this.$store.state)
           this.banner = res.data.banner;
           this.datalist = res.data.data;
+
           // this.playerimg=res.data.data
           let _this = this;
           this.banner.forEach(function(val, index) {
             _this.images.push(val.imgurl)
-
           });
+           this.datalist.forEach(function(val, index) {
+             console.log(val)
+             this.$store.commit('newIndex',val)
+          });
+
 
         }).catch(err => {
           //todo
         })
       },
-      getmusicInfo(hash) {
+     getmusicInfo(hash,index) {
         let url = "/api/app/i/getSongInfo.php/?hash=" + hash + "&from=mkugou&cmd=playInfo";
         this.axios.get(url).then(res => {
           this.show = true;
-          this.playersrc=res.data.url
-          this.playimg=res.data.imgUrl
-          let imgarr=this.playimg.split('{size}');
-          this.playimg=imgarr[0] + "400" + imgarr[1];
+          this.playersrc = res.data.url;
+          this.playimg = res.data.imgUrl;
+          let imgarr = this.playimg.split('{size}');
+          this.playimg = imgarr[0] + "400" + imgarr[1];
+          this.songtitle = res.data.fileName;
         }).catch(err => {
           //todo
         })
