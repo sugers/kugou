@@ -5,7 +5,7 @@
         <div class="rankleft">
           <img :src='ranklist.banner7url' />
         </div>
-        <div class="rankright">
+        <div class="rankright" @click="rankdetail(ranklist.rankid)">
           <p>{{ranklist.rankname}}</p>
           <van-icon name="arrow" />
         </div>
@@ -16,16 +16,18 @@
 </template>
 
 <script>
-  export default{
-    data(){
-      return{
-        ranklist: []
+  export default {
+    data() {
+      return {
+        ranklist: [],
+        rankid: ""
       }
     },
+
     created() {
       this.songrank()
     },
-    methods:{
+    methods: {
       songrank() {
         let url = '/api/rank/list&json=true'
         let size = 400;
@@ -36,10 +38,19 @@
             let rankbig = val.banner7url.split('{size}')
             val.bannerurl = rankarr[0] + "400" + rankarr[1];
             val.banner7url = rankbig[0] + "400" + rankbig[1];
-
           })
         }).catch(err => {
           //todo
+        })
+      },
+      rankdetail(id) {
+        this.$router.push({
+          path: '/rankdetail',
+          name: 'Rankdetail',
+          params: {
+            "rankid": id,
+            "page": 1
+          }
         })
       }
     }
@@ -47,11 +58,11 @@
 </script>
 
 <style scoped>
-.rankList ul li {
+  .rankList ul li {
     height: 100px;
-    padding:20px 0px;
+    padding: 20px 0px;
     margin: 0px 20px;
-    border-bottom:1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
   }
 
   .rankList ul li div {
@@ -68,7 +79,7 @@
   .rankList ul li .rankleft img {
     max-width: 100%;
     height: 100%;
-    margin:0px;
+    margin: 0px;
   }
 
   .rankList ul li .rankright {

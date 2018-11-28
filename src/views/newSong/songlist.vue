@@ -5,7 +5,7 @@
         <div class="rankleft">
           <img :src='infoitem.imgurl' />
         </div>
-        <div class="rankright">
+        <div class="rankright" @click="runsongdetail(infoitem.specialid)">
           <p>
             <span>{{infoitem.specialname}}</span>
             <span style="margin-top:5px;">
@@ -27,16 +27,26 @@
   export default {
     data() {
       return {
-        info: []
+        info: [],
       }
     },
     created() {
       this.getsonglist()
     },
     methods: {
+      runsongdetail(id){
+        this.$router.push({
+          path: '/sonlistdetail',
+          name: 'Songlistdetail',
+          params: {
+            "songid": id,
+          }
+        })
+      },
       getsonglist() {
         let url = '/api/plist/index&json=true';
         this.axios.get(url).then(res => {
+          console.log(res)
           this.info = res.data.plist.list.info
           this.info.forEach(val => {
             let infoarr = val.imgurl.split('{size}');

@@ -75,7 +75,6 @@
             page: 'json'
           }
         }).then(res => {
-          console.log(res)
         //    this.$store.commit('newIndex',hash)
         //  console.log(this.$store.state)
           this.banner = res.data.banner;
@@ -85,10 +84,6 @@
           let _this = this;
           this.banner.forEach(function(val, index) {
             _this.images.push(val.imgurl)
-          });
-           this.datalist.forEach(function(val, index) {
-             console.log(val)
-             this.$store.commit('newIndex',val)
           });
 
 

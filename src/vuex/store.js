@@ -5,14 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
  // 定义状态
-  state: [
-
-  ]
+  state: {
+    rankname:''
+  }
 ,
   mutations: {
-    newIndex(state, hash) {
-
-      state.push(hash)
+    newIndex(state, msg) {
+      state.rankname=msg
     }
   }
 })
