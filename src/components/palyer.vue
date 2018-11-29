@@ -32,7 +32,13 @@
         handler() {
           this.getprops()
         }
+      },
+      'message': {
+        handler() {
+          this.getprops()
+        }
       }
+
     },
     created() {
       this.getprops();
@@ -55,8 +61,9 @@
           this.playshow = true;
         }
       },
-      clickNext(e){
-        console.log(e)
+      clickNext(e) {
+        //暂时留着
+        // console.log(e)
       }
     }
 

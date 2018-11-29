@@ -2,7 +2,7 @@
   <div class="singer">
      <ul>
         <li v-for="(singeritem,index) in singerArr" :key="index" >
-         <div>
+         <div @click="jumb(singeritem.classname,singeritem.classid)">
             <span>{{singeritem.classname}}</span>
             <van-icon name="arrow"/>
          </div>
@@ -21,6 +21,16 @@
       this.getsonger();
     },
     methods:{
+      jumb(classname,id){
+         this.$router.push({
+          path: '/singerinfo',
+          name: 'Singerinfodetail',
+          params: {
+            "singerclass": classname,
+            "singerid":id
+          }
+        })
+      },
       getsonger(){
         let url='/api/singer/class&json=true'
         this.axios.get(url).then(res=>{

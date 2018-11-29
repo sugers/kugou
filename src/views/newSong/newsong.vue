@@ -34,7 +34,7 @@
         </van-tab>
       </van-tabs>
     </div>
-    <van-popup v-model="show" position="bottom" :overlay="false">
+    <van-popup v-model="show" position="bottom" :overlay="false" :lock-scroll="false">
       <Player :message="playersrc" :playimg="playimg" :songtitle="songtitle"></Player>
     </van-popup>
   </section>
